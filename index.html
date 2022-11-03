@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Màn hình nền</title>
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+
+<body>
+    <div class="main" style="display: block;">
+        <div id="background" class="background" style="background-image: url('/src/images/demo.jpg');"></div>
+    </div>
+    <div class="edit-background" style="font-family: Patrick Hand; cursor: default; text-align: center; display: none;">
+        <div class="mid">
+            <h2 class="heading">Chỉnh sửa hình nền</h2>
+            <div>
+                <span class="el">Loại hình nền</span>
+                <select class="el" name="" id="">
+                    <optgroup label="Hình ảnh">
+                        <option value="1">Đơn</option>
+                        <option value="2">Ngày - Đêm</option>
+                    </optgroup>
+                    <optgroup label="Video">
+                        <option value="3">Đơn</option>
+                        <option value="24">Ngày - Đêm</option>
+                    </optgroup>
+                </select>
+                <div class="path">
+                    <span class="el">Hình ảnh</span>
+                    <input class="el" type="text" placeholder="Dường dẫn file">
+                    <input class="el" type="file" name="" id="" accept=".jpg,.png">
+
+                    <span class="el">Hình ảnh 2</span>
+                    <input class="el" type="text" placeholder="Dường dẫn file">
+                    <input class="el" type="file" name="" id="" accept=".jpg,.png">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./src/model.js"></script>
+    <script src="./src/main.js"></script>
+</body>
+
+</html>

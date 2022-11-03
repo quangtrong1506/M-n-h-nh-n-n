@@ -1,0 +1,255 @@
+/* Font - main */
+@font-face {
+    font-family: 'patrick hand';
+    src: url('./fonts/PatrickHand-Regular.ttf');
+}
+/* width */
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+body {
+    margin: 0 auto;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+.background {
+    background-attachment: fixed;
+    background-size: cover;
+    background-clip: border-box;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 1;
+}
+
+.text {
+    position: absolute;
+    padding: 5px;
+    background-color: transparent;
+    z-index: 10;
+    cursor: default;
+    user-select: none;
+}
+
+.mouse-right-when-click {
+    position: absolute;
+    padding: 5px;
+    background-color: white;
+    z-index: 100;
+    user-select: none;
+    border-radius: 10px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+.mouse-right-when-click ul {
+    padding: 0;
+    margin: 0;
+    font-family: 'patrick hand', sans-serif;
+}
+.mouse-right-when-click ul li {
+    list-style: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-top: 1px solid rgb(228, 228, 228);
+}
+.mouse-right-when-click ul li:first-child {
+    border-top: none;
+}
+
+.edit-text {
+    background-color: white;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+}
+.edit-text .col {
+    flex: 1;
+    position: relative;
+    z-index: 5;
+}
+.edit-text .right {
+    flex: 2;
+}
+.edit-text .edit-text-background {
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    opacity: 0.6;
+    z-index: 0;
+}
+h1.heading {
+    text-align: center;
+}
+.edit-text .pos input,
+.edit-text .text {
+    cursor: text;
+    font-size: 26px;
+    position: relative;
+    border: 1px solid transparent;
+    background-color: rgba(240, 248, 255, 0.2);
+    outline: none;
+}
+
+.edit-text .pos input:focus-visible,
+.edit-text .text:focus-visible,
+.edit-text .pos input:hover,
+.edit-text .text:hover {
+    border: 1px solid black;
+    outline: none;
+    background-color: rgba(240, 248, 255, 1);
+}
+
+.edit-text .left .content {
+    width: 90%;
+    margin: 0 auto;
+}
+.edit-text .left .content .text {
+    width: calc(100% - 20px);
+    padding: 10px;
+}
+.edit-text .right {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+.edit-text .right .text-demo {
+    max-width: 800px;
+    max-height: 450px;
+    margin: 0 auto;
+    overflow: auto;
+}
+.edit-text .color-select {
+    width: 100%;
+    height: 40px;
+    border: none;
+    outline: none;
+    padding: 0;
+    opacity: 0.2;
+}
+.edit-text .color-select:focus-visible,
+.edit-text .color-select:focus,
+.edit-text .color-select:hover {
+    opacity: 1;
+}
+.edit-text .content > span {
+    display: inline-block;
+    padding: 10px 0 4px 0;
+}
+.edit-text .pos {
+    display: flex;
+    justify-content: space-between;
+}
+.edit-text .pos > div {
+    width: 45%;
+    position: relative;
+}
+.edit-text .pos > div span {
+    position: absolute;
+    z-index: 2;
+    left: 5px;
+}
+
+.edit-text .pos input {
+    width: calc(100% - 20px);
+    padding-left: 20px;
+}
+
+.edit-text .pos span {
+    font-size: 22px;
+}
+.edit-text select {
+    width: 100%;
+    font-size: 26px;
+    border: 1px solid transparent;
+    background-color: rgba(240, 248, 255, 0.2);
+    outline: none;
+    height: 40px;
+}
+.edit-text select:hover,
+.edit-text select:focus-visible {
+    border: 1px solid black;
+    background-color: rgba(240, 248, 255, 1);
+}
+
+.edit-text .btn-group {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-text .btn-group input {
+    width: 30%;
+    padding: 5px;
+    border: 1px solid rgb(163, 163, 163);
+    outline: none;
+    cursor: pointer;
+    font-family: 'patrick hand';
+    font-size: 22px;
+}
+
+.edit-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    justify-items: center;
+    justify-content: center;
+}
+
+.edit-background .mid {
+    width: 400px;
+    max-height: 600px;
+    margin-top: 50px;
+    background-color: rgba(255, 255, 255, 0.185);
+    border-radius: 10px;
+}
+
+.edit-background .mid > div {
+    display: flex;
+    flex-direction: column;
+}
+.edit-background .mid > div .el {
+    width: 60%;
+    margin-top: 10px;
+    padding: 5px;
+    font-size: 18px;
+    margin: 0 auto;
+}
+.edit-background .mid > div span.el {
+    text-align: left;
+}
+.edit-background .mid > div input[type='text'].el {
+    width: calc(60% - 10px);
+}
+.edit-background .mid span {
+    display: inline-block;
+}
