@@ -10,33 +10,122 @@
 </head>
 
 <body>
-    <div class="main" style="display: block;">
-        <div id="background" class="background" style="background-image: url('/src/images/demo.jpg');"></div>
-    </div>
-    <div class="edit-background" style="font-family: Patrick Hand; cursor: default; text-align: center; display: none;">
-        <div class="mid">
-            <h2 class="heading">Chỉnh sửa hình nền</h2>
-            <div>
-                <span class="el">Loại hình nền</span>
-                <select class="el" name="" id="">
-                    <optgroup label="Hình ảnh">
-                        <option value="1">Đơn</option>
-                        <option value="2">Ngày - Đêm</option>
-                    </optgroup>
-                    <optgroup label="Video">
-                        <option value="3">Đơn</option>
-                        <option value="24">Ngày - Đêm</option>
-                    </optgroup>
-                </select>
-                <div class="path">
-                    <span class="el">Hình ảnh</span>
-                    <input class="el" type="text" placeholder="Dường dẫn file">
-                    <input class="el" type="file" name="" id="" accept=".jpg,.png">
+    <div class="main">
+        <div id="background" data-type="0">
+            <div class="background-view" style="display: none; background-image: url('./src/images/demo.jpg');"></div>
+            <div class="background-view" style="display: none">
+                <video src="./src/video/xue-hu-sang-virtual-youtuber-preview.mp4" autoplay loop width="100%"
+                    muted></video>
+            </div>
+        </div>
 
-                    <span class="el">Hình ảnh 2</span>
-                    <input class="el" type="text" placeholder="Dường dẫn file">
-                    <input class="el" type="file" name="" id="" accept=".jpg,.png">
-
+        <div class="text-container" style="display: none;">
+            <div class="text ab" id="text-1" style="font-size: 200px;font-family: Allison;">
+                Description of the demo
+            </div>
+        </div>
+        <div class="edit-container">
+            <h1>Chỉnh sửa văn bản hiển thị</h1>
+            <div class="content">
+                <div class="content-1">
+                    <ul>
+                        <li onclick="changeTab(0)">Văn bản</li>
+                        <li onclick="changeTab(1)">Màu sắc</li>
+                        <li onclick="changeTab(2)">Nền & Viền</li>
+                        <li onclick="changeTab(0)">Ẩn</li>
+                        <li onclick="changeTab(0)">Xóa</li>
+                        <li onclick="changeTab(0)">Lưu</li>
+                    </ul>
+                </div>
+                <div class="content-2">
+                    <div class="tab">
+                        <div class="tab-1" style="display: none;">
+                            <label>Văn bản hiển thị</label>
+                            <input type="text" name="text" class="text-input" id="text-input" spellcheck="false"
+                                autocomplete="off" style="width: 80%;" oninput="onchangeValueTab1()"
+                                value="Trọng trẻ trâu">
+                            <br>
+                            <label>Cỡ chữ</label>
+                            <input type="number" class="size-input" min="10" max="300" value="18"
+                                oninput="onchangeValueTab1()">
+                            <label style="text-align: right;">Font chữ</label>
+                            <select class="select-font font-input" oninput="onchangeValueTab1()"></select>
+                            <label style="min-width: 60px; text-align: right;" for="bold">In đậm</label>
+                            <input id="bold" type="checkbox" onchange="onchangeValueTab1()">
+                            <label style="min-width: 60px; text-align: right;" for="i">In nghiêng</label>
+                            <input id="i" type="checkbox" onchange="onchangeValueTab1()">
+                        </div>
+                        <div class="tab-2">
+                            <label for="">Màu chữ</label>
+                            <select onchange="changeTypeColor(event)">
+                                <option value="0">Đơn màu</option>
+                                <option value="1">Nhiều màu</option>
+                            </select>
+                            <div class="single">
+                                <label for="">Chọn màu</label>
+                                <input type="color" class="color-input" oninput="changeColor()">
+                                <label for="" style="text-align: center;">Hoặc</label>
+                                <input type="button" value="Màu ngẫu nhiên" onclick="randomColorBtn()">
+                            </div>
+                            <div class="multi" style="display:none ;">
+                                <label>Loại màu</label>
+                                <select onchange="changeTypeColor(event)">
+                                    <option value="1">Dải màu</option>
+                                    <option value="2">Nhiều màu (Random)</option>
+                                </select>
+                                <div class="multi-select" style="display: block;">
+                                    <div class="colorx4">
+                                        <label for="">Màu sắc</label>
+                                        <input type="color" oninput="change4Color()">
+                                        <input type="color" oninput="change4Color()">
+                                        <input type="color" oninput="change4Color()">
+                                        <input type="color" oninput="change4Color()">
+                                    </div>
+                                    <label>Hướng màu</label>
+                                    <select oninput="changeDeg4Color()">
+                                        <optgroup label="Cơ bản">
+                                            <option value="top">Từ trên xuống dưới</option>
+                                            <option value="bottom">Từ dưới lên trên</option>
+                                            <option value="left">Từ trái sang phải</option>
+                                            <option value="right">Từ phải sang trái</option>
+                                        </optgroup>
+                                        <optgroup label="Theo góc">
+                                            <option value="0deg">0°</option>
+                                            <option value="15deg">15°</option>
+                                            <option value="30deg">30°</option>
+                                            <option value="45deg">45°</option>
+                                            <option value="60deg">60°</option>
+                                            <option value="75deg">75°</option>
+                                            <option value="90deg">90°</option>
+                                            <option value="115deg">115°</option>
+                                            <option value="120deg">120°</option>
+                                            <option value="135deg">135°</option>
+                                            <option value="150deg">150°</option>
+                                            <option value="165deg">165°</option>
+                                            <option value="180deg">180°</option>
+                                            <option value="195deg">195°</option>
+                                            <option value="210deg">210°</option>
+                                            <option value="225deg">225°</option>
+                                            <option value="240deg">240°</option>
+                                            <option value="255deg">255°</option>
+                                            <option value="270deg">270°</option>
+                                            <option value="285deg">285°</option>
+                                            <option value="300deg">300°</option>
+                                            <option value="315deg">315°</option>
+                                            <option value="330deg">330°</option>
+                                            <option value="345deg">345°</option>
+                                            <option value="360deg">360°</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-3">
+                    <div class="demo">
+                        <div class="demo__text ">Chỉnh sửa văn bản hiển thị</div>
+                    </div>
                 </div>
             </div>
         </div>

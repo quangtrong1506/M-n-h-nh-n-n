@@ -5,11 +5,21 @@ class Text {
         this.text = options.text || '';
         this.color = options.color || 'black';
         this.fontFamily = options.fontFamily || 'Patrick Hand';
-        this.fontSize = options.fontSize || 12;
+        this.fontSize = options.fontSize || 24;
         this.backgroundColor = options.backgroundColor || 'transparent';
         this.x = options.x || 0;
         this.y = options.y || 0;
         this.status = options.status || 1;
+        this.bold = 'initial';
+        this.italic = 'initial';
+        this.multiColor = options.multiColor || {
+            type: 1,
+            pos: 'left',
+            color1: '#E0144C',
+            color2: '#379237',
+            color3: '#0008C1',
+            color4: '#ffffff',
+        };
     }
 }
 
@@ -243,3 +253,63 @@ const Font = [
         src: 'WindSong-Regular.ttf',
     },
 ];
+function randomColor() {
+    var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    return '#' + randomColor;
+}
+function randomColorColorText(text) {
+    var a = text.split('');
+    var span = '';
+    for (let i = 0; i < a.length; i++) {
+        span += `<span style="color:${randomColor()}">${a[i]}</span>`;
+    }
+    return span;
+}
+function randomColorColorTextWithTime(element, time) {
+    if (time == 0) return;
+    randomColorColorText(element);
+    setInterval(() => {
+        randomColorColorText(element);
+    }, time);
+}
+
+// chuột chữ phải vào chữ
+function mouseClickText(elmnt) {
+    elmnt = elmnt.id ? elmnt : document.getElementById(elmnt);
+    elmnt.addEventListener('mousedown', function (e) {
+        var main = document.querySelector('.main');
+
+        var x = e.clientX;
+        var y = e.clientY;
+        if (main.clientHeight - y < 100) y = y - 100;
+        if (main.clientWidth - x < 100) x = x - 100;
+        if (e.button == 2) {
+            e.preventDefault();
+            mouseRightClick(elmnt, x, y);
+        }
+    });
+
+    function mouseRightClick(elmnt, x, y) {
+        if (document.getElementById(`for-${elmnt.id}`))
+            document.getElementById(`for-${elmnt.id}`).remove();
+        var el = document.createElement('div');
+        el.id = `for-${elmnt.id}`;
+        el.classList = 'mouse-right-when-click';
+        el.style.top = y + 'px';
+        el.style.left = x + 'px';
+        el.innerHTML = `
+            <ul>
+                <li onclick="remoteEditText('${elmnt.id}',1)">Chỉnh sửa</li>
+                <li onclick="setHideText('${elmnt.id}',0)">Ẩn</li>
+                <li>Xóa</li>
+            </ul>`;
+        setTimeout(() => {
+            el.remove();
+        }, 5000);
+        el.addEventListener('mouseleave', function () {
+            el.remove();
+        });
+        document.querySelector('.main').appendChild(el);
+    }
+}
+mouseClickText('text-1');

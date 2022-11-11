@@ -1,21 +1,5 @@
 window.onload = () => {
-    // set tọa độ của phần tử khi load
-    var text = JSON.parse(localStorage.getItem('Text')) || [];
-    for (var i = 0; i < text.length; i++) {
-        var a = document.createElement('div');
-        a.classList = 'text';
-        a.id = text[i].id;
-        a.style.display = text[i].status == 1 ? 'block' : 'none';
-
-        a.innerHTML = `
-        <span class="day-text" style=" font-size:${text[i].fontSize}px; font-family: '${text[i].fontFamily}'; color: ${text[i].color}">
-            ${text[i].text}
-        </span>`;
-        document.querySelector('.main').appendChild(a);
-        setPositionOnLoad(text[i].id, text[i].x, text[i].y);
-        dragElement(`${text[i].id}`);
-        mouseClick(`${text[i].id}`);
-    }
+    //Todo set tọa độ của phần tử khi load
 
     // xóa sự kiện chuột phải mặc định
     document.oncontextmenu = function rightClick(clickEvent) {
@@ -23,7 +7,7 @@ window.onload = () => {
         return false;
     };
 
-    // set font
+    //Todo set font
     (function () {
         var newStyle = document.createElement('style');
         var styleInner = '';
@@ -37,12 +21,30 @@ window.onload = () => {
         document.body.appendChild(newStyle);
     })();
 
-    mouseClickBackground('background');
+    //Todo set type background
+    (() => {
+        var type = document.getElementById('background').getAttribute('data-type') || 0;
+        document.querySelectorAll('.background-view')[type].style.display = 'block';
+        // if (type == 1) document.querySelector('.babckground-view video').play();
+    })();
+    (() => {
+        var a = document.querySelectorAll('.select-font');
+        a.forEach((element) => {
+            var options = '';
+            Font.forEach((element2) => {
+                options += `<option value="${element2.name}" style="font-family: ${element2.name};">${element2.name}</option>`;
+            });
+            element.innerHTML = options;
+        });
+    })();
 };
+
+var textDemo = new Text();
 
 //? set sự kiện kéo thả của 1 element
 function dragElement(elmnt) {
     if (!elmnt.id) elmnt = document.getElementById(elmnt);
+    if (!elmnt) return;
     var pos1 = 0,
         pos2 = 0,
         pos3 = 0,
@@ -52,7 +54,7 @@ function dragElement(elmnt) {
     function dragMouseDown(e) {
         e = e || window.event;
         e.preventDefault();
-        // get the mouse cursor position at startup:
+        //Todo get the mouse cursor position at startup:
         pos3 = e.clientX;
         pos4 = e.clientY;
         document.onmouseup = closeDragElement;
@@ -77,7 +79,7 @@ function dragElement(elmnt) {
 
         var x = elmnt.style.left.toString().replace('px', ''),
             y = elmnt.style.top.toString().replace('px', '');
-        var main = document.querySelector('.background');
+        var main = document.querySelector('body');
         var w = main.clientWidth,
             h = main.clientHeight;
 
@@ -97,7 +99,7 @@ function dragElement(elmnt) {
             elmnt.style.top = h + 50 - elmnt.clientHeight + 'px';
             y = h + 50 - elmnt.clientHeight;
         }
-        setNewPosition(elmnt.id, x, y);
+        // setNewPosition(elmnt.id, x, y);
     }
 
     function closeDragElement() {
@@ -106,294 +108,120 @@ function dragElement(elmnt) {
     }
 }
 
-//? set vị trí sau khi kéo thả vào localStorage
-function setNewPosition(id, x, y) {
-    var positionElement = JSON.parse(localStorage.getItem('Text')) || [];
-    var i = positionElement.length;
-    while (i--) {
-        if (positionElement[i].id == id) {
-            positionElement[i].x = x;
-            positionElement[i].y = y;
-            localStorage.setItem('Text', JSON.stringify(positionElement));
-            return 'Sửa cái đã có';
-        }
-    }
-    // if i = -1 thì tạo mới
-    if (i == -1) {
-        var pos = new Text(id, x, y);
-        positionElement.push(pos);
-        localStorage.setItem('Text', JSON.stringify(positionElement));
-        return 'Tạo mới';
-    }
+dragElement('text-1');
+
+//Todo:
+function onchangeValueTab1() {
+    var text = document.querySelector('.tab .tab-1 .text-input').value;
+    var size = document.querySelector('.tab .tab-1 .size-input').value;
+    var font = document.querySelector('.tab .tab-1 .font-input').value;
+    document.querySelector('.tab .tab-1 #bold').checked
+        ? (textDemo.bold = 'bold')
+        : (textDemo.bold = 'initial');
+    document.querySelector('.tab .tab-1 #i').checked
+        ? (textDemo.italic = 'italic')
+        : (textDemo.italic = 'initial');
+
+    textDemo.fontSize = size;
+    textDemo.fontFamily = font;
+    textDemo.text = text;
+
+    setStyleTextDemo();
 }
-
-// set vị trí của 1 element
-function setPositionOnLoad(id, x, y) {
-    var elmnt = id.id ? id : document.getElementById(id);
-    if (elmnt) {
-        elmnt.style.top = y + 'px';
-        elmnt.style.left = x + 'px';
-    }
-}
-
-// chuột chữ phải vào chữ
-function mouseClick(elmnt) {
-    elmnt = elmnt.id ? elmnt : document.getElementById(elmnt);
-    elmnt.addEventListener('mousedown', function (e) {
-        var x = e.clientX;
-        var y = e.clientY;
-        if (e.button == 2) {
-            e.preventDefault();
-            mouseRightClick(elmnt, x, y);
-        }
-    });
-
-    function mouseRightClick(elmnt, x, y) {
-        if (document.getElementById(`for-${elmnt.id}`))
-            document.getElementById(`for-${elmnt.id}`).remove();
-        var el = document.createElement('div');
-        el.id = `for-${elmnt.id}`;
-        el.classList = 'mouse-right-when-click';
-        el.style.top = y + 'px';
-        el.style.left = x + 'px';
-        el.innerHTML = `
-            <ul>
-                <li onclick="remoteEditText('${elmnt.id}',1)">Chỉnh sửa</li>
-                <li onclick="setHideText('${elmnt.id}',0)">Ẩn</li>
-                <li>Xóa</li>
-            </ul>`;
-        setTimeout(() => {
-            el.remove();
-        }, 5000);
-        el.addEventListener('mouseleave', function () {
-            el.remove();
-        });
-        document.querySelector('.main').appendChild(el);
-    }
-}
-
-// Hiện ô sửa Text hoặc thêm mới
-function editText(id, option) {
-    var a;
-    if (!id) a = new Text();
-    else {
-        var b = JSON.parse(localStorage.getItem('Text')) || [];
-        b.forEach((element) => {
-            if (element.id == id) a = element;
-        });
-    }
-    var elmnt = document.createElement('div');
-    elmnt.classList = 'edit-text';
-    elmnt.style.fontFamily = 'Patrick Hand';
-    elmnt.innerHTML = `<div class="edit-text-background"></div>
-    <div class="col left">
-        <h1 class="heading">Chỉnh sửa</h1>
-        <div class="content">
-            <span>Văn bản muốn hiển thị</span>
-            <input class="text char" type="text" spellcheck="false" value="${a.text}" id="input-text">
-            <span>Font size</span>
-            <input class="text fontSize" type="number" min="10" max="200" value="${a.fontSize}" id="input-font-size">
-            <span>Font</span>
-            <select class="select-font" style="cursor: pointer;" value="${a.fontFamily}" id="input-font-family"></select>
-            <span>Màu sắc</span>
-            <input class="color-select" type="color" value="${a.color}" id="input-color">
-            <span style="display: none">Màu Nền</span>
-            <input style="display: none" class="color-select" type="color" value="${a.backgroundColor}" id="input-background-color">
-            <span>
-                Vị trí
-            </span>
-            <div class="pos">
-                <div>
-                    <span>x:</span>
-                    <input type="number" min="-50" max="1280" value="${a.x}" id="pos-x">
-                </div>
-                <div>
-                    <span>y:</span>
-                    <input type="number" min="-50" max="600" value="${a.y}" id="pos-y">
-                </div>
-            </div>
-            <div class="btn-group">
-                <input type="button" value="Xác nhận" onclick="confirmText('${a.id}')">
-                <input type="button" class="hide-text-edit" onclick="setHideTextWhenEdit('${a.id}')" value="Ẩn">
-                <input type="button" onclick="remoteEditText()" value="Hủy">
-            </div>
-        </div>
-    </div>
-    <div class="col right">
-        <div class="text-demo" style="font-family: '${a.fontFamily}'; font-size: ${a.fontSize}px;color: ${a.color}">${a.text}</div>
-    </div>`;
-
-    document.body.appendChild(elmnt);
-    var option = {
-        fontFamily: a.fontFamily,
-    };
-    setEventEditText(option);
-}
-
-// Hiện hoặc ẩn phần sửa text
-function remoteEditText(id, status, option) {
-    if (status == 1) {
-        document.querySelector('.main').style.display = 'none';
-        editText(id, option);
-    } else location.reload();
-}
-
-// set sự kiện ở edit-text
-function setEventEditText(option) {
-    console.log('🚀 ~ file: main.js ~ line 242 ~ setEventEditText ~ option', option);
-    Font.forEach((element) => {
-        var op = document.createElement('option');
-        if (element.name == option.fontFamily) op.selected = true;
-        op.innerHTML = element.name;
-        op.style.fontFamily = element.name;
-        op.value = element.name;
-        document.querySelector('.select-font').appendChild(op);
-    });
-    document.querySelector('.select-font').addEventListener('change', function (e) {
-        var v = document.querySelector('.select-font').value;
-        document.querySelector('.text-demo').style.fontFamily = v;
-    });
-    document.querySelector('.char').addEventListener('input', function (e) {
-        var v = document.querySelector('.char').value;
-        document.querySelector('.text-demo').innerHTML = v;
-    });
-    document.querySelector('.fontSize').addEventListener('input', function (e) {
-        var v = document.querySelector('.fontSize').value;
-        v = v < 10 ? 10 : v > 200 ? 200 : v;
-        document.querySelector('.text-demo').style.fontSize = v + 'px';
-    });
-    document.querySelector('.color-select').addEventListener('input', function (e) {
-        var v = document.querySelector('.color-select').value;
-        document.querySelector('.text-demo').style.color = v;
-    });
-    var o = document.querySelector('.background');
-    var src = o.style.backgroundImage;
-    document.querySelector('.edit-text .edit-text-background').style.backgroundImage = src;
-}
-// Lưu Text vào localStorage
-function saveEditText(id, option) {
-    var a = JSON.parse(localStorage.getItem('Text')) || [];
-    if (!checkInputEditText()) return;
+//TODO: Chạy thử
+onchangeValueTab1();
+// Thay đổi tab trong chỉnh sửa văn bản
+function changeTab(n) {
+    var a = document.querySelectorAll('.tab > div');
     a.forEach((element) => {
-        if (element.id == id) {
-            element.text = document.getElementById('input-text').value || 'Chưa nhập text';
-            element.color = document.getElementById('input-color').value || 'White';
-            element.fontFamily =
-                document.getElementById('input-font-family').value || 'Patrick Hand';
-            element.fontSize = document.getElementById('input-font-size').value || 10;
-            element.backgroundColor =
-                document.getElementById('input-background-color').value || 'transparent';
-            element.x = document.getElementById('pos-x').value || 0;
-            element.y = document.getElementById('pos-y').value || 0;
-
-            localStorage.setItem('Text', JSON.stringify(a));
-        }
+        element.style.display = 'none';
     });
+    if (a[n]) a[n].style.display = 'block';
 }
-// Kiểm tra dữ liệu đầu vào của text
-function checkInputEditText() {
-    var text = document.getElementById('input-text').value,
-        fontSize = document.getElementById('input-font-size').value,
-        x = document.getElementById('pos-x').value,
-        y = document.getElementById('pos-y').value;
-
-    if (!text) alert('Chưa nhập văn bản cần hiển thị');
-    else if (fontSize < 10 || fontSize > 200) alert('Font size nhập vào không hợp lệ');
-    else if (x < -50 || x > 1280) alert('X nhập vào không hợp lệ');
-    else if (y < -50 || y > 700) alert('Y size nhập vào không hợp lệ');
-    else return true;
+// Thay đổi màu sắc ở đơn màu
+function changeColor() {
+    var color = document.querySelector('.tab .tab-2 .color-input').value;
+    textDemo.color = color;
+    setStyleTextDemo();
 }
+// lấy ngẫu nhiên màu ở đơn màu
+function randomColorBtn() {
+    var color = randomColor();
+    textDemo.color = color;
+    document.querySelector('.tab .tab-2 .color-input').value = color;
 
-// Xác nhận text or tạo mới Text
-function confirmText(id, option) {
-    saveEditText(id, option);
-    remoteEditText('', 0, option);
+    setStyleTextDemo();
 }
 
-function setHideText(id, option) {
-    var a = JSON.parse(localStorage.getItem('Text')) || [];
-    a.forEach((element) => {
-        if (element.id == id) {
-            element.status = option;
-            localStorage.setItem('Text', JSON.stringify(a));
-            location.reload();
-        }
-    });
+// Thay đổi loại màu của chữ
+function changeTypeColor(event) {
+    var select = event.target.value;
+    if (select == 0) {
+        document.querySelector('.tab-2 .single').style.display = 'inline-block';
+        document.querySelector('.tab-2 .multi').style.display = 'none';
+        textDemo.multiColor.type = 0;
+        document
+            .querySelector('.content .content-3 .demo .demo__text')
+            .classList.remove('linear-gradient');
+    } else if (select == 1) {
+        document.querySelector('.tab-2 .single').style.display = 'none';
+        document.querySelector('.tab-2 .multi').style.display = 'block';
+        textDemo.multiColor.type = 1;
+        var a = document.querySelectorAll('.colorx4 input');
+        console.log('🚀 ~ file: main.js ~ line 171 ~ changeTypeColor ~ a', a);
+        a[0].value = textDemo.multiColor.color1;
+        a[1].value = textDemo.multiColor.color2;
+        a[2].value = textDemo.multiColor.color3;
+        a[3].value = textDemo.multiColor.color4;
+        document.querySelector('.multi-select').style.display = 'block';
+    } else if (select == 2) {
+        textDemo.multiColor.type = 2;
+        document.querySelector('.multi-select').style.display = 'none';
+    }
+    setStyleTextDemo();
 }
+// Nhận tất cả thay đổi kiểu cho chữ hiển thị
+function setStyleTextDemo() {
+    var bg =
+        textDemo.multiColor.type == 1
+            ? `background: -webkit-linear-gradient(${textDemo.multiColor.pos}, ${textDemo.multiColor.color1}, ${textDemo.multiColor.color2}, ${textDemo.multiColor.color3}, ${textDemo.multiColor.color4});
+            -webkit-background-clip: text;`
+            : 'background: transparent';
+    document.querySelector('.content .content-3 .demo .demo__text').setAttribute(
+        'style',
+        `font-size: ${textDemo.fontSize}px; font-weight: ${textDemo.bold};
+             font-style: ${textDemo.italic};font-family: ${textDemo.fontFamily};
+             color: ${textDemo.color}; ${bg}`
+    );
+    if (textDemo.multiColor.type == 0) {
+        document.querySelector('.content .content-3 .demo .demo__text').innerHTML = textDemo.text;
+    } else if (textDemo.multiColor.type == 1) {
+        // linear color
+        document
+            .querySelector('.content .content-3 .demo .demo__text')
+            .classList.add('linear-gradient');
 
-function setHideTextWhenEdit(id) {
-    var a = JSON.parse(localStorage.getItem('Text')) || [];
-    a.forEach((element) => {
-        if (element.id == id) {
-            var status = element.status;
-            if (status == 1) {
-                element.status = 0;
-                document.querySelector('.edit-text .hide-text-edit').value = 'Hiện thị';
-            } else if (status == 0) {
-                element.status = 1;
-                document.querySelector('.edit-text .hide-text-edit').value = 'Ẩn';
-            }
-            localStorage.setItem('Text', JSON.stringify(a));
-        }
-    });
-}
-
-function removeText(id) {
-    var a = JSON.parse(localStorage.getItem('Text')) || [];
-    var i = 0;
-    a.forEach((element) => {
-        if (element.id == id) {
-            var x = confirm('Xác nhận xóa Text: ' + element.text);
-            if (x) {
-                a.splice(i, 1);
-            }
-            localStorage.setItem('Text', JSON.stringify(a));
-        }
-        i++;
-    });
-}
-
-function mouseClickBackground(elmnt) {
-    elmnt = elmnt.id ? elmnt : document.getElementById(elmnt);
-    elmnt.addEventListener('mousedown', function (e) {
-        var x = e.clientX;
-        var y = e.clientY;
-        if (e.button == 2) {
-            e.preventDefault();
-            mouseRightClick(elmnt, x, y);
-        }
-    });
-
-    function mouseRightClick(elmnt, x, y) {
-        if (document.getElementById(`for-${elmnt.id}`))
-            document.getElementById(`for-${elmnt.id}`).remove();
-        var el = document.createElement('div');
-        el.id = `for-${elmnt.id}`;
-        el.classList = 'mouse-right-when-click';
-        el.style.top = y + 'px';
-        el.style.left = x + 'px';
-        el.innerHTML = `
-            <ul>
-                <li onclick="">Chỉnh sửa hình nền</li>
-                <li onclick="">Ẩn hình nền</li>
-                <li>Danh sách Text</li>
-            </ul>`;
-        setTimeout(() => {
-            el.remove();
-        }, 5000);
-        el.addEventListener('mouseleave', function () {
-            el.remove();
-        });
-        document.querySelector('.main').appendChild(el);
+        document.querySelector('.content .content-3 .demo .demo__text').innerHTML = textDemo.text;
+    } else if (textDemo.multiColor.type == 2) {
+        var tmp = textDemo.text;
+        document
+            .querySelector('.content .content-3 .demo .demo__text')
+            .classList.remove('linear-gradient');
+        document.querySelector('.content .content-3 .demo .demo__text').innerHTML =
+            randomColorColorText(tmp);
     }
 }
-function setEvenEditBackground(option) {
-    var o = document.querySelector('.background');
-    var src = o.style.backgroundImage;
-    document.querySelector('.edit-background').style.backgroundImage = src;
+
+//Todo: Thay đổi màu sắc ở dải màu
+function change4Color() {
+    textDemo.multiColor.color1 = document.querySelectorAll('.multi-select .colorx4 input')[0].value;
+    textDemo.multiColor.color2 = document.querySelectorAll('.multi-select .colorx4 input')[1].value;
+    textDemo.multiColor.color3 = document.querySelectorAll('.multi-select .colorx4 input')[2].value;
+    textDemo.multiColor.color4 = document.querySelectorAll('.multi-select .colorx4 input')[3].value;
+    setStyleTextDemo();
 }
-setEvenEditBackground();
-var a = ['ABdE', 'ABde', 'AbdE', 'Abde', 'aBdE', 'abdE', 'abde', 'abdE'];
-var b = ['ABdE', 'ABde', 'aBdE', 'aBde'];
 
-
+function changeDeg4Color() {
+    textDemo.multiColor.pos = document.querySelector('.multi-select select').value;
+    setStyleTextDemo();
+}
