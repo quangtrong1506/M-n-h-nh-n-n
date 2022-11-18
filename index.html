@@ -20,9 +20,7 @@
         </div>
 
         <div class="text-container" style="display: none;">
-            <div class="text ab" id="text-1" style="font-size: 200px;font-family: Allison;">
-                Description of the demo
-            </div>
+
         </div>
         <div class="edit-container">
             <h1>Chỉnh sửa văn bản hiển thị</h1>
@@ -32,9 +30,9 @@
                         <li onclick="changeTab(0)">Văn bản</li>
                         <li onclick="changeTab(1)">Màu sắc</li>
                         <li onclick="changeTab(2)">Nền & Viền</li>
-                        <li onclick="changeTab(0)">Ẩn</li>
-                        <li onclick="changeTab(0)">Xóa</li>
-                        <li onclick="changeTab(0)">Lưu</li>
+                        <li onclick="changeTab(3)">Vị trí</li>
+                        <li onclick="xoaBtn()">Xóa</li>
+                        <li onclick="saveBtn()">Lưu</li>
                     </ul>
                 </div>
                 <div class="content-2">
@@ -55,7 +53,7 @@
                             <label style="min-width: 60px; text-align: right;" for="i">In nghiêng</label>
                             <input id="i" type="checkbox" onchange="onchangeValueTab1()">
                         </div>
-                        <div class="tab-2">
+                        <div class="tab-2" style="display: none;">
                             <label for="">Màu chữ</label>
                             <select onchange="changeTypeColor(event)">
                                 <option value="0">Đơn màu</option>
@@ -120,6 +118,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-3" style="display: none;">Tap 3</div>
+                        <div class="tab-4" style="display: block;">
+                            <div>
+                                <label>X</label>
+                                <input type="number" class="x-input" value="0" min="-50" max="1300">
+                                <label>Y</label>
+                                <input type="number" class="y-input" value="0" min="-50" max="600">
+                                <input type="button" value="Ẩn">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="content-3">
@@ -130,6 +138,7 @@
             </div>
         </div>
     </div>
+    <div class="message"></div>
     <script src="./src/model.js"></script>
     <script src="./src/main.js"></script>
 </body>

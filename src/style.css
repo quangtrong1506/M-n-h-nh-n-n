@@ -23,6 +23,17 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+input[type='button'] {
+    cursor: pointer;
+    min-width: 60px;
+}
+input[type='color'] {
+    min-width: 80px;
+    padding: 0;
+    outline: none;
+}
+
 body {
     margin: 0 auto;
     box-sizing: border-box;
@@ -100,10 +111,10 @@ select {
     position: absolute;
     z-index: 5;
     width: 80%;
-    margin: 50px auto;
+    margin: 10px auto;
     left: 0;
     right: 0;
-    background-color: rgba(255, 255, 255, 0.2);
+    /* background-color: rgba(255, 255, 255, 0.2); */
     border-radius: 10px;
 }
 .edit-container .content {
@@ -131,6 +142,8 @@ select {
     background-color: rgb(196, 255, 235);
     margin: 5px 0;
     border-radius: 2px;
+    min-width: calc(50% - 15px);
+    text-align: center;
 }
 .edit-container .content-1 ul li:hover {
     box-shadow: 0 0 2px black;
@@ -182,11 +195,57 @@ select:focus-visible {
     min-width: 60px;
     margin-top: 10px;
 }
-input[type='button'] {
+.edit-container .content-2 .tab-4 label {
+    min-width: 20px;
+    width: 20px;
+    margin-top: 10px;
+    text-align: center;
+}
+.edit-container .content-2 .tab-4 input[type="number"] {
+    min-width: 60px;
+    width: 60px;
+}
+
+.message {
+    position: fixed;
+    right: 30px;
+    bottom: 50px;
+    z-index: 1000;
+    font-family: 'Patrick hand';
+}
+.message .message__container {
+    padding: 5px;
+    padding-left: 12px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    min-width: 280px;
+    max-width: 300px;
+    position: relative;
+    transform: translateX(calc(100% + 50px));
+    background-color: white;
+    margin: 5px;
+    animation: slide-left 0.1s linear both;
+}
+.message .message__container .title {
+    border-bottom: 1px solid rgb(188, 188, 188);
+    padding-bottom: 5px;
+    font-size: 20px;
+    font-weight: 500;
+}
+.message .message__container .mes {
+    padding: 8px;
+    padding-left: 0;
+    min-height: 40px;
+}
+.message .message__container .close-btn {
+    position: absolute;
+    top: 2px;
+    right: 10px;
+    font-size: 24px;
     cursor: pointer;
 }
-input[type='color'] {
-    min-width: 80px;
-    padding: 0;
-    outline: none;
+
+@keyframes slide-left {
+    to {
+        transform: translateX(0);
+    }
 }

@@ -12,8 +12,8 @@ class Text {
         this.status = options.status || 1;
         this.bold = 'initial';
         this.italic = 'initial';
+        this.colorType = options.colorType || 0;
         this.multiColor = options.multiColor || {
-            type: 1,
             pos: 'left',
             color1: '#E0144C',
             color2: '#379237',
@@ -282,6 +282,7 @@ function mouseClickText(elmnt) {
         var x = e.clientX;
         var y = e.clientY;
         if (main.clientHeight - y < 100) y = y - 100;
+        if (y < 10) y = 10;
         if (main.clientWidth - x < 100) x = x - 100;
         if (e.button == 2) {
             e.preventDefault();
@@ -312,4 +313,3 @@ function mouseClickText(elmnt) {
         document.querySelector('.main').appendChild(el);
     }
 }
-mouseClickText('text-1');

@@ -159,14 +159,14 @@ function changeTypeColor(event) {
     if (select == 0) {
         document.querySelector('.tab-2 .single').style.display = 'inline-block';
         document.querySelector('.tab-2 .multi').style.display = 'none';
-        textDemo.multiColor.type = 0;
+        textDemo.colorType = 0;
         document
             .querySelector('.content .content-3 .demo .demo__text')
             .classList.remove('linear-gradient');
     } else if (select == 1) {
         document.querySelector('.tab-2 .single').style.display = 'none';
         document.querySelector('.tab-2 .multi').style.display = 'block';
-        textDemo.multiColor.type = 1;
+        textDemo.colorType = 1;
         var a = document.querySelectorAll('.colorx4 input');
         console.log('🚀 ~ file: main.js ~ line 171 ~ changeTypeColor ~ a', a);
         a[0].value = textDemo.multiColor.color1;
@@ -175,7 +175,7 @@ function changeTypeColor(event) {
         a[3].value = textDemo.multiColor.color4;
         document.querySelector('.multi-select').style.display = 'block';
     } else if (select == 2) {
-        textDemo.multiColor.type = 2;
+        textDemo.colorType = 2;
         document.querySelector('.multi-select').style.display = 'none';
     }
     setStyleTextDemo();
@@ -183,7 +183,7 @@ function changeTypeColor(event) {
 // Nhận tất cả thay đổi kiểu cho chữ hiển thị
 function setStyleTextDemo() {
     var bg =
-        textDemo.multiColor.type == 1
+        textDemo.colorType == 1
             ? `background: -webkit-linear-gradient(${textDemo.multiColor.pos}, ${textDemo.multiColor.color1}, ${textDemo.multiColor.color2}, ${textDemo.multiColor.color3}, ${textDemo.multiColor.color4});
             -webkit-background-clip: text;`
             : 'background: transparent';
@@ -193,16 +193,16 @@ function setStyleTextDemo() {
              font-style: ${textDemo.italic};font-family: ${textDemo.fontFamily};
              color: ${textDemo.color}; ${bg}`
     );
-    if (textDemo.multiColor.type == 0) {
+    if (textDemo.colorType == 0) {
         document.querySelector('.content .content-3 .demo .demo__text').innerHTML = textDemo.text;
-    } else if (textDemo.multiColor.type == 1) {
+    } else if (textDemo.colorType == 1) {
         // linear color
         document
             .querySelector('.content .content-3 .demo .demo__text')
             .classList.add('linear-gradient');
 
         document.querySelector('.content .content-3 .demo .demo__text').innerHTML = textDemo.text;
-    } else if (textDemo.multiColor.type == 2) {
+    } else if (textDemo.colorType == 2) {
         var tmp = textDemo.text;
         document
             .querySelector('.content .content-3 .demo .demo__text')
@@ -224,4 +224,177 @@ function change4Color() {
 function changeDeg4Color() {
     textDemo.multiColor.pos = document.querySelector('.multi-select select').value;
     setStyleTextDemo();
+}
+function changePosition() {
+    var xElement = document.querySelector('.content .content-2 .tab-4 .x-input');
+    var yElement = document.querySelector('.content .content-2 .tab-4 .y-input');
+
+    var y = yElement.value < 50 ? 50 : yElement.value > 1300 ? 1300 : yElement.value;
+    var x = xElement.value < 50 ? 50 : xElement.value > 600 ? 600 : xElement.value;
+
+    textDemo.x = x;
+    textDemo.y = y;
+}
+function saveBtn(id) {
+    var arrText = JSON.parse(localStorage.getItem('Text')) || [];
+    for (let i = 0; i < arrText.length; i++) {
+        const element = arrText[i];
+        if (element.id == id) {
+            //Cập nhật nếu tồn tại
+            element = textDemo;
+            showMessage('Thành công', 'Cập nhật dữ liệu thành công! Đã áp dụng');
+            return;
+        }
+    }
+    arrText.push(textDemo);
+    showMessage('Thành công', 'Thêm dữ liệu mới thành công! Đã áp dụng');
+    localStorage.setItem('Text', JSON.stringify(arrText));
+
+    //giao diện
+    document.querySelector('.main .edit-container').style.display = 'none';
+    document.querySelector('.main .text-container').style.display = 'block';
+    loadText();
+}
+//Todo: Hiện thông báo
+function showMessage(title, message, type) {
+    var element = document.createElement('div');
+    element.className = 'message__container';
+    element.innerHTML = `
+    <div class="title">${title}</div>
+    <div class="mes">${message}</div>
+    <div class="close-btn">×</div>`;
+    element.addEventListener('click', (e) => {
+        if (e.target.classList.contains('close-btn')) {
+            var a = setInterval((event) => {
+                element.style.opacity -= 0.1;
+                if (element.style.opacity < 0) {
+                    clearInterval(a);
+                    element.remove();
+                }
+            }, 100);
+        }
+    });
+    setTimeout((event) => {
+        var a = setInterval(() => {
+            element.style.opacity -= 0.1;
+            if (element.style.opacity < 0) {
+                clearInterval(a);
+                element.remove();
+            }
+        }, 100);
+    }, 3500);
+    document.querySelector('.message').appendChild(element);
+}
+
+function loadText() {
+    var a = JSON.parse(localStorage.getItem('Text')) || [];
+    for (let i = 0; i < a.length; i++) {
+        const element = a[i];
+        if (element.status == 1) {
+            var newE = document.createElement('div');
+            newE.classList = 'text ab';
+            newE.id = element.id;
+            var bg =
+                element.colorType == 1
+                    ? `background: -webkit-linear-gradient(${element.multiColor.pos}, ${element.multiColor.color1}, ${element.multiColor.color2}, ${element.multiColor.color3}, ${element.multiColor.color4});
+            -webkit-background-clip: text;`
+                    : 'background: transparent';
+
+            newE.setAttribute(
+                'style',
+                `font-size: ${element.fontSize}px; font-weight: ${element.bold};
+                font-style: ${element.italic};font-family: ${
+                    element.fontFamily == undefined ? 'Patrick hand' : element.fontFamily
+                };
+             color: ${element.color}; ${bg}; top: ${
+                    element.y == undefined ? element.y : 100
+                }; left: ${element.x == undefined ? element.x : 100};`
+            );
+            if (element.colorType == 0) {
+                newE.innerHTML = element.text;
+            } else if (element.colorType == 1) {
+                // linear color
+                newE.classList.add('linear-gradient');
+                newE.innerHTML = element.text;
+            } else if (element.colorType == 2) {
+                var tmp = element.text;
+                newE.innerHTML = randomColorColorText(tmp);
+            }
+            mouseClickText(newE);
+            dragElement(newE);
+            document.querySelector('.text-container').appendChild(newE);
+        }
+    }
+}
+
+function xoaBtn(id) {
+    for (let i = 0; i < arrText.length; i++) {
+        const element = arrText[i];
+        if (element.id == id) {
+            //Xóa nếu tồn tại
+            element = textDemo;
+            showMessage('Thành công', 'Cập nhật dữ liệu thành công! Đã áp dụng');
+            return;
+        }
+    }
+    showMessage('Hủy', 'Bạn đã hủy thao tác!');
+    loadText();
+}
+var a = document.querySelectorAll('input[type="number"]');
+for (let i = 0; i < a.length; i++) {
+    const element = a[i];
+    element.addEventListener('input', function (e) {
+        changeValueNumberInput(e.target);
+    });
+}
+function changeValueNumberInput(element) {
+    var min = parseInt(element.min) || 0;
+    var max = parseInt(element.max) || 0;
+    var value = parseInt(element.value) || 0;
+    if (value < min) {
+        element.value = min;
+        showMessage('Thông báo', 'Đã vượt qua giới hạn cho phép');
+    }
+    if (value > max) {
+        element.value = max;
+        showMessage('Thông báo', 'Đã vượt qua giới hạn cho phép');
+    }
+}
+
+function setTextDemo(
+    id,
+    text,
+    color,
+    fontFamily,
+    fontSize,
+    backgroundColor,
+    x,
+    y,
+    status,
+    bold,
+    italic,
+    colorType,
+    multiColor
+) {
+    var options = {
+        text: text || '',
+        color: color || 'black',
+        fontFamily: fontFamily || 'Patrick Hand',
+        fontSize: fontSize || 24,
+        backgroundColor: backgroundColor || 'transparent',
+        x: x || 0,
+        y: y || 0,
+        status: status || 1,
+        bold: bold || 'initial',
+        italic: italic || 'initial',
+        colorType: colorType || 0,
+        multiColor: multiColor || {
+            pos: 'left',
+            color1: '#E0144C',
+            color2: '#379237',
+            color3: '#0008C1',
+            color4: '#ffffff',
+        },
+    };
+    textDemo = new Text(id, options);
 }
