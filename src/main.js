@@ -99,7 +99,7 @@ function dragElement(elmnt) {
             elmnt.style.top = h + 50 - elmnt.clientHeight + 'px';
             y = h + 50 - elmnt.clientHeight;
         }
-        // setNewPosition(elmnt.id, x, y);
+        setNewPosition(elmnt.id, x, y);
     }
 
     function closeDragElement() {
@@ -128,8 +128,6 @@ function onchangeValueTab1() {
 
     setStyleTextDemo();
 }
-//TODO: Chạy thử
-onchangeValueTab1();
 // Thay đổi tab trong chỉnh sửa văn bản
 function changeTab(n) {
     var a = document.querySelectorAll('.tab > div');
@@ -250,11 +248,10 @@ function saveBtn(id) {
     showMessage('Thành công', 'Thêm dữ liệu mới thành công! Đã áp dụng');
     localStorage.setItem('Text', JSON.stringify(arrText));
 
-    //giao diện
-    document.querySelector('.main .edit-container').style.display = 'none';
-    document.querySelector('.main .text-container').style.display = 'block';
+    hideEditText();
     loadText();
 }
+
 //Todo: Hiện thông báo
 function showMessage(title, message, type) {
     var element = document.createElement('div');
@@ -288,6 +285,7 @@ function showMessage(title, message, type) {
 
 function loadText() {
     var a = JSON.parse(localStorage.getItem('Text')) || [];
+    document.querySelector('.text-container').innerHTML = '';
     for (let i = 0; i < a.length; i++) {
         const element = a[i];
         if (element.status == 1) {
@@ -302,20 +300,26 @@ function loadText() {
 
             newE.setAttribute(
                 'style',
-                `font-size: ${element.fontSize}px; font-weight: ${element.bold};
-                font-style: ${element.italic};font-family: ${
-                    element.fontFamily == undefined ? 'Patrick hand' : element.fontFamily
-                };
-             color: ${element.color}; ${bg}; top: ${
-                    element.y == undefined ? element.y : 100
-                }; left: ${element.x == undefined ? element.x : 100};`
+                `font-size: ${element.fontSize}px; font-weight: ${element.bold};font-style: ${element.italic};font-family: ${element.fontFamily};color: ${element.color}; ${bg}; top: ${element.y}px;left: ${element.x}px;`
             );
+            newE.setAttribute('data-type-color', element.colorType);
             if (element.colorType == 0) {
                 newE.innerHTML = element.text;
             } else if (element.colorType == 1) {
                 // linear color
                 newE.classList.add('linear-gradient');
                 newE.innerHTML = element.text;
+                newE.setAttribute(
+                    'data-color',
+                    element.multiColor.color1 +
+                        ',' +
+                        element.multiColor.color2 +
+                        ',' +
+                        element.multiColor.color3 +
+                        ',' +
+                        element.multiColor.color4
+                );
+                newE.setAttribute('data-pos', element.multiColor.pos);
             } else if (element.colorType == 2) {
                 var tmp = element.text;
                 newE.innerHTML = randomColorColorText(tmp);
@@ -327,24 +331,40 @@ function loadText() {
     }
 }
 
-function xoaBtn(id) {
+function xoaBtn() {
+    var id = document.querySelector('.edit-container').id;
+    var arrText = JSON.parse(localStorage.getItem('Text')) || [];
     for (let i = 0; i < arrText.length; i++) {
         const element = arrText[i];
         if (element.id == id) {
-            //Xóa nếu tồn tại
-            element = textDemo;
+            arrText.slice(i, 1);
+            localStorage.setItem('Text', JSON.parse(arrText));
             showMessage('Thành công', 'Cập nhật dữ liệu thành công! Đã áp dụng');
+            hideEditText();
+            loadText();
             return;
         }
     }
     showMessage('Hủy', 'Bạn đã hủy thao tác!');
+    hideEditText();
     loadText();
 }
+
+function hideEditText() {
+    //giao diện
+    document.querySelector('.main .edit-container').style.display = 'none';
+    document.querySelector('.main .text-container').style.display = 'block';
+}
+
 var a = document.querySelectorAll('input[type="number"]');
 for (let i = 0; i < a.length; i++) {
     const element = a[i];
     element.addEventListener('input', function (e) {
         changeValueNumberInput(e.target);
+    });
+    element.addEventListener('change', function (e) {
+        var value = e.target.value;
+        if (!value) e.target.value = 0;
     });
 }
 function changeValueNumberInput(element) {
@@ -397,4 +417,82 @@ function setTextDemo(
         },
     };
     textDemo = new Text(id, options);
+}
+
+function setNewPosition(id, x, y) {
+    var a = JSON.parse(localStorage.getItem('Text')) || [];
+    a.forEach((element) => {
+        if (element.id == id) {
+            element.x = x;
+            element.y = y;
+            localStorage.setItem('Text', JSON.stringify(a));
+        }
+    });
+}
+
+function remoteEditText(id) {
+    document.querySelector('.main .edit-container').style.display = 'block';
+    document.querySelector('.main .text-container').style.display = 'none';
+    var element = document.getElementById(id);
+    var text = element.textContent,
+        color = element.style.color,
+        fontFamily = element.style.fontFamily.replace(/\"/g, ''),
+        fontSize = element.style.fontSize,
+        backgroundColor = element.style.backgroundColor,
+        status = 1,
+        bold = element.style.fontWeight,
+        italic = element.style.fontStyle,
+        x = element.style.left,
+        y = element.style.top,
+        typeColor = element.getAttribute('data-type-color'),
+        multiColor = {};
+    if (element.classList.contains('linear-gradient')) {
+        var background = element.getAttribute('data-color');
+        var acolor = background.split(',');
+        multiColor.color1 = acolor[0];
+        multiColor.color2 = acolor[1];
+        multiColor.color3 = acolor[2];
+        multiColor.color4 = acolor[3];
+        multiColor.pos = element.getAttribute('data-pos');
+    }
+    var options = {
+        text: text,
+        color: color,
+        fontFamily: fontFamily,
+        fontSize: fontSize,
+        backgroundColor: backgroundColor,
+        x: x,
+        y: y,
+        status: status,
+        bold: bold,
+        italic: italic,
+        colorType: typeColor,
+        multiColor: multiColor,
+    };
+    textDemo = new Text(id, options);
+    setStyleTextDemo();
+    console.log('🚀 ~ file: main.js ~ line 472 ~ remoteEditText ~ textDemo', textDemo);
+
+    changeTab(0);
+}
+
+function statusBtn(e) {
+    var element = e.target;
+    if (textDemo.status == 1) {
+        element.value = 'Hiện thị';
+        textDemo.status = 0;
+    } else {
+        element.value = 'Ẩn';
+        textDemo.status = 1;
+    }
+}
+function deleteTextBtn(id) {
+    var a = JSON.parse(localStorage.getItem('Text')) || [];
+    for (let i = 0; i < a.length; i++) {
+        if (a[i].id == id) {
+            a.splice(i, 1);
+        }
+    }
+    localStorage.setItem('Text', JSON.stringify(a));
+    loadText();
 }

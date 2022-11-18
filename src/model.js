@@ -298,11 +298,12 @@ function mouseClickText(elmnt) {
         el.classList = 'mouse-right-when-click';
         el.style.top = y + 'px';
         el.style.left = x + 'px';
+
         el.innerHTML = `
             <ul>
-                <li onclick="remoteEditText('${elmnt.id}',1)">Chỉnh sửa</li>
-                <li onclick="setHideText('${elmnt.id}',0)">Ẩn</li>
-                <li>Xóa</li>
+                <li onclick="remoteEditText('${elmnt.id}')">Chỉnh sửa</li>
+                <li onclick="setHideText('${elmnt.id}')">Ẩn</li>
+                <li onclick="deleteTextBtn('${elmnt.id}')">Xóa</li>
             </ul>`;
         setTimeout(() => {
             el.remove();
@@ -310,6 +311,9 @@ function mouseClickText(elmnt) {
         el.addEventListener('mouseleave', function () {
             el.remove();
         });
+        el.onclick = function () {
+            el.remove();
+        };
         document.querySelector('.main').appendChild(el);
     }
 }
