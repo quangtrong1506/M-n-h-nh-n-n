@@ -37,6 +37,33 @@ window.onload = () => {
             element.innerHTML = options;
         });
     })();
+    var a = document.querySelectorAll('input[type="number"]');
+    for (let i = 0; i < a.length; i++) {
+        const element = a[i];
+        // element.addEventListener('chan', function (e) {
+        //     ;
+        // });
+        element.addEventListener('change', function (e) {
+            changeValueNumberInput(e.target);
+            var value = e.target.value;
+            if (!value) e.target.value = 0;
+        });
+    }
+    function changeValueNumberInput(element) {
+        var min = parseInt(element.min) || 0;
+        var max = parseInt(element.max) || 0;
+        var value = parseInt(element.value) || 0;
+        if (value < min) {
+            element.value = min;
+            showMessage('Thông báo', 'Đã vượt qua giới hạn cho phép');
+        }
+        if (value > max) {
+            element.value = max;
+            showMessage('Thông báo', 'Đã vượt qua giới hạn cho phép');
+        }
+    }
+    //Todo loadn dữ liệu "Text" khi load xong
+    loadText();
 };
 
 var textDemo = new Text();
@@ -107,9 +134,6 @@ function dragElement(elmnt) {
         document.onmousemove = null;
     }
 }
-
-dragElement('text-1');
-
 //Todo:
 function onchangeValueTab1() {
     var text = document.querySelector('.tab .tab-1 .text-input').value;
@@ -233,14 +257,21 @@ function changePosition() {
     textDemo.x = x;
     textDemo.y = y;
 }
+function saveBtn2() {
+    var id = document.querySelector('.edit-container').id;
+    saveBtn(id);
+}
 function saveBtn(id) {
     var arrText = JSON.parse(localStorage.getItem('Text')) || [];
     for (let i = 0; i < arrText.length; i++) {
-        const element = arrText[i];
-        if (element.id == id) {
+        if (arrText[i].id == id) {
+            console.log(typeof id);
             //Cập nhật nếu tồn tại
-            element = textDemo;
+            arrText[i] = textDemo;
             showMessage('Thành công', 'Cập nhật dữ liệu thành công! Đã áp dụng');
+            localStorage.setItem('Text', JSON.stringify(arrText));
+            hideEditText();
+            loadText();
             return;
         }
     }
@@ -356,31 +387,6 @@ function hideEditText() {
     document.querySelector('.main .text-container').style.display = 'block';
 }
 
-var a = document.querySelectorAll('input[type="number"]');
-for (let i = 0; i < a.length; i++) {
-    const element = a[i];
-    element.addEventListener('input', function (e) {
-        changeValueNumberInput(e.target);
-    });
-    element.addEventListener('change', function (e) {
-        var value = e.target.value;
-        if (!value) e.target.value = 0;
-    });
-}
-function changeValueNumberInput(element) {
-    var min = parseInt(element.min) || 0;
-    var max = parseInt(element.max) || 0;
-    var value = parseInt(element.value) || 0;
-    if (value < min) {
-        element.value = min;
-        showMessage('Thông báo', 'Đã vượt qua giới hạn cho phép');
-    }
-    if (value > max) {
-        element.value = max;
-        showMessage('Thông báo', 'Đã vượt qua giới hạn cho phép');
-    }
-}
-
 function setTextDemo(
     id,
     text,
@@ -434,48 +440,55 @@ function remoteEditText(id) {
     document.querySelector('.main .edit-container').style.display = 'block';
     document.querySelector('.main .text-container').style.display = 'none';
     var element = document.getElementById(id);
-    var text = element.textContent,
-        color = element.style.color,
-        fontFamily = element.style.fontFamily.replace(/\"/g, ''),
-        fontSize = element.style.fontSize,
-        backgroundColor = element.style.backgroundColor,
-        status = 1,
-        bold = element.style.fontWeight,
-        italic = element.style.fontStyle,
-        x = element.style.left,
-        y = element.style.top,
-        typeColor = element.getAttribute('data-type-color'),
-        multiColor = {};
-    if (element.classList.contains('linear-gradient')) {
-        var background = element.getAttribute('data-color');
-        var acolor = background.split(',');
-        multiColor.color1 = acolor[0];
-        multiColor.color2 = acolor[1];
-        multiColor.color3 = acolor[2];
-        multiColor.color4 = acolor[3];
-        multiColor.pos = element.getAttribute('data-pos');
-    }
-    var options = {
-        text: text,
-        color: color,
-        fontFamily: fontFamily,
-        fontSize: fontSize,
-        backgroundColor: backgroundColor,
-        x: x,
-        y: y,
-        status: status,
-        bold: bold,
-        italic: italic,
-        colorType: typeColor,
-        multiColor: multiColor,
-    };
-    textDemo = new Text(id, options);
+    if (element) {
+        var text = element.textContent,
+            color = element.style.color,
+            fontFamily = element.style.fontFamily.replace(/\"/g, ''),
+            fontSize = element.style.fontSize,
+            backgroundColor = element.style.backgroundColor,
+            status = 1,
+            bold = element.style.fontWeight,
+            italic = element.style.fontStyle,
+            x = element.style.left,
+            y = element.style.top,
+            typeColor = element.getAttribute('data-type-color'),
+            multiColor = {};
+        if (element.classList.contains('linear-gradient')) {
+            var background = element.getAttribute('data-color');
+            var acolor = background.split(',');
+            multiColor.color1 = acolor[0];
+            multiColor.color2 = acolor[1];
+            multiColor.color3 = acolor[2];
+            multiColor.color4 = acolor[3];
+            multiColor.pos = element.getAttribute('data-pos');
+        }
+        var options = {
+            text: text,
+            color: color,
+            fontFamily: fontFamily,
+            fontSize: fontSize,
+            backgroundColor: backgroundColor,
+            x: x,
+            y: y,
+            status: status,
+            bold: bold,
+            italic: italic,
+            colorType: typeColor,
+            multiColor: multiColor,
+        };
+        textDemo = new Text(id, options);
+    } else textDemo = new Text();
+    //Todo set Value
+    document.querySelector('.main .edit-container').id = textDemo.id;
+    document.getElementById('text-input').value = textDemo.text;
+    document.getElementById('size-input').value = textDemo.fontSize;
+    if (textDemo.bold == 'bold') document.getElementById('bold').selected;
+    if (textDemo.italic == 'italic') document.getElementById('i').selected;
     setStyleTextDemo();
-    console.log('🚀 ~ file: main.js ~ line 472 ~ remoteEditText ~ textDemo', textDemo);
-
+    console.log(textDemo);
     changeTab(0);
 }
-
+//Todo ẩn hoặc hiển ở menu chỉnh sửa
 function statusBtn(e) {
     var element = e.target;
     if (textDemo.status == 1) {
@@ -486,11 +499,23 @@ function statusBtn(e) {
         textDemo.status = 1;
     }
 }
+//Todo xóa "Text" ở màn hình chính
 function deleteTextBtn(id) {
     var a = JSON.parse(localStorage.getItem('Text')) || [];
     for (let i = 0; i < a.length; i++) {
         if (a[i].id == id) {
             a.splice(i, 1);
+        }
+    }
+    localStorage.setItem('Text', JSON.stringify(a));
+    loadText();
+}
+//Todo ẩn "Text" ở màn hình chính
+function statusBtn2(id) {
+    var a = JSON.parse(localStorage.getItem('Text')) || [];
+    for (let i = 0; i < a.length; i++) {
+        if (a[i].id == id) {
+            a[i].status = 0;
         }
     }
     localStorage.setItem('Text', JSON.stringify(a));

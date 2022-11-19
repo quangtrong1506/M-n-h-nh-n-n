@@ -19,10 +19,10 @@
             </div>
         </div>
 
-        <div class="text-container" style="display: none;">
+        <div class="text-container">
 
         </div>
-        <div class="edit-container">
+        <div class="edit-container" style="display: none;">
             <h1>Chỉnh sửa văn bản hiển thị</h1>
             <div class="content">
                 <div class="content-1">
@@ -32,7 +32,7 @@
                         <li onclick="changeTab(2)">Nền & Viền</li>
                         <li onclick="changeTab(3)">Vị trí</li>
                         <li onclick="xoaBtn()">Xóa</li>
-                        <li onclick="saveBtn()">Lưu</li>
+                        <li onclick="saveBtn2()">Lưu</li>
                     </ul>
                 </div>
                 <div class="content-2">
@@ -41,7 +41,7 @@
                             <label>Văn bản hiển thị</label>
                             <input type="text" name="text" class="text-input" id="text-input" spellcheck="false"
                                 autocomplete="off" style="width: 80%;" oninput="onchangeValueTab1()"
-                                value="Trọng trẻ trâu">
+                                placeholder="Hãy nhập gì đó">
                             <br>
                             <label>Cỡ chữ</label>
                             <input type="number" class="size-input" min="10" max="300" value="18"

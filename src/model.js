@@ -302,7 +302,7 @@ function mouseClickText(elmnt) {
         el.innerHTML = `
             <ul>
                 <li onclick="remoteEditText('${elmnt.id}')">Chỉnh sửa</li>
-                <li onclick="setHideText('${elmnt.id}')">Ẩn</li>
+                <li onclick="statusBtn2('${elmnt.id}')">Ẩn</li>
                 <li onclick="deleteTextBtn('${elmnt.id}')">Xóa</li>
             </ul>`;
         setTimeout(() => {
