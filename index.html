@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="main">
+    <div class="main" id="main">
         <div id="background" data-type="0">
             <div class="background-view" style="display: none; background-image: url('./src/images/demo.jpg');"></div>
             <div class="background-view" style="display: none">
@@ -44,7 +44,7 @@
                                 placeholder="Hãy nhập gì đó">
                             <br>
                             <label>Cỡ chữ</label>
-                            <input type="number" class="size-input" min="10" max="300" value="18"
+                            <input type="number" id="size-input" class="size-input" min="10" max="300" value="18"
                                 oninput="onchangeValueTab1()">
                             <label style="text-align: right;">Font chữ</label>
                             <select class="select-font font-input" oninput="onchangeValueTab1()"></select>

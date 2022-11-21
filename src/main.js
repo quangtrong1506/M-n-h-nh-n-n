@@ -64,6 +64,7 @@ window.onload = () => {
     }
     //Todo loadn dữ liệu "Text" khi load xong
     loadText();
+    mouseClickText('main');
 };
 
 var textDemo = new Text();
@@ -481,11 +482,11 @@ function remoteEditText(id) {
     //Todo set Value
     document.querySelector('.main .edit-container').id = textDemo.id;
     document.getElementById('text-input').value = textDemo.text;
-    document.getElementById('size-input').value = textDemo.fontSize;
+    document.getElementById('size-input').value = parseInt(textDemo.fontSize);
     if (textDemo.bold == 'bold') document.getElementById('bold').selected;
     if (textDemo.italic == 'italic') document.getElementById('i').selected;
+    onchangeValueTab1();
     setStyleTextDemo();
-    console.log(textDemo);
     changeTab(0);
 }
 //Todo ẩn hoặc hiển ở menu chỉnh sửa

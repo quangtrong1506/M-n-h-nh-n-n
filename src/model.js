@@ -25,7 +25,7 @@ class Text {
 
 function createId(length) {
     var d = new Date().getDate(),
-        m = new Date().getMonth(),
+        m = new Date().getMonth() + 1,
         y = new Date().getFullYear();
 
     d = d < 10 ? '0' + d : d;
@@ -286,7 +286,8 @@ function mouseClickText(elmnt) {
         if (main.clientWidth - x < 100) x = x - 100;
         if (e.button == 2) {
             e.preventDefault();
-            mouseRightClick(elmnt, x, y);
+            if (elmnt.id == 'main') mouseRightClick2(x, y);
+            else mouseRightClick(elmnt, x, y);
         }
     });
 
@@ -304,6 +305,33 @@ function mouseClickText(elmnt) {
                 <li onclick="remoteEditText('${elmnt.id}')">Chỉnh sửa</li>
                 <li onclick="statusBtn2('${elmnt.id}')">Ẩn</li>
                 <li onclick="deleteTextBtn('${elmnt.id}')">Xóa</li>
+            </ul>`;
+        setTimeout(() => {
+            el.remove();
+        }, 5000);
+        el.addEventListener('mouseleave', function () {
+            el.remove();
+        });
+        el.onclick = function () {
+            el.remove();
+        };
+        document.querySelector('.main').appendChild(el);
+    }
+    function mouseRightClick2(x, y) {
+        if (document.getElementById(`for-background`))
+            document.getElementById(`for-background`).remove();
+        var el = document.createElement('div');
+        el.id = `for-background`;
+        el.classList = 'mouse-right-when-click';
+        el.style.top = y + 'px';
+        el.style.left = x + 'px';
+
+        el.innerHTML = `
+            <ul>
+                <li>Chỉnh sửa nền</li>
+                <li>Ẩn nền</li>
+                <li>Ẩn toàn bộ skin</li>
+                <li>Danh sách skin</li>
             </ul>`;
         setTimeout(() => {
             el.remove();
