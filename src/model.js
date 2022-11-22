@@ -331,6 +331,7 @@ function mouseClickText(elmnt) {
                 <li>Chỉnh sửa nền</li>
                 <li>Ẩn nền</li>
                 <li>Ẩn toàn bộ skin</li>
+                <li>Hiện thị toàn bộ skin</li>
                 <li>Danh sách skin</li>
             </ul>`;
         setTimeout(() => {
