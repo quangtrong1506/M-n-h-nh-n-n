@@ -252,3 +252,133 @@ select:focus-visible {
         transform: translateX(0);
     }
 }
+.list-skin {
+    position: absolute;
+    z-index: 5;
+    width: 80%;
+    margin: 10px auto;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    min-height: 96vh;
+}
+
+.list-skin > div {
+    width: 99%;
+    margin: 7px auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 92vh;
+}
+.list-skin > div .container {
+    display: flex;
+    flex-direction: column;
+}
+
+.list-skin > div .header {
+    display: flex;
+    min-height: 50px;
+    width: 96%;
+    margin: 0 auto;
+    /* background-color: red; */
+    display: flex;
+    justify-content: space-between;
+}
+
+.list-skin > div .header .start {
+    line-height: 50px;
+    font-size: 30px;
+}
+.list-skin > div .header .end{
+    line-height: 50px;
+    color: #00b6a4;
+}
+.list-skin > div .header .end span{
+    cursor: pointer;
+}
+.list-skin > div .header .end span:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+.list-skin .container .element {
+    display: flex;
+    min-height: 100px;
+    align-items: center;
+    width: 90%;
+    margin: 5px auto;
+    background-color: #f7fffa;
+    padding: 0 30px;
+}
+.list-skin .container .element:first-child {
+    margin-top: 2px;
+}
+.list-skin .container .element .start {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+.list-skin .container .element .start .name {
+    font-size: 30px;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+}
+.list-skin .container .element .start .name:hover {
+    /* text-decoration: underline; */
+    color: #00b6a4;
+}
+.list-skin .container .element .start .time {
+    position: relative;
+    font-size: 10px;
+    margin-top: 10px;
+}
+.list-skin .container .element .start .time > div {
+    position: absolute;
+    display: flex;
+}
+.list-skin .container .element .start .time > div .created-at {
+    margin-right: 15px;
+}
+
+.list-skin .container .element .end {
+    display: flex;
+}
+.list-skin .container .element .end .group-btn {
+    display: flex;
+}
+.list-skin .container .element .end .group-btn > div {
+    margin: 0 10px;
+}
+.list-skin .container .element .end .group-btn i {
+    cursor: pointer;
+}
+.tooltip {
+    position: relative;
+    width: auto;
+    text-align: center;
+}
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    z-index: 999;
+    top: 45px;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+    /* -webkit-transform: translate(-50%, -50%); */
+    background: rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+    color: white;
+    text-align: center;
+    padding: 5px 10px;
+    display: none;
+    min-width: 60px;
+}
+.tooltip:hover::after {
+    display: inline-block;
+}

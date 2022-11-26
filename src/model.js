@@ -20,6 +20,10 @@ class Text {
             color3: '#0008C1',
             color4: '#ffffff',
         };
+        this.time = options.time || {
+            createdAt: getToday(),
+            updatedAt: getToday(),
+        };
     }
 }
 
@@ -276,9 +280,8 @@ function randomColorColorTextWithTime(element, time) {
 // chuột chữ phải vào chữ
 function mouseClickText(elmnt) {
     elmnt = elmnt.id ? elmnt : document.getElementById(elmnt);
-    elmnt.addEventListener('mousedown', function (e) {
+    elmnt.addEventListener('mousedown', function a(e) {
         var main = document.querySelector('.main');
-
         var x = e.clientX;
         var y = e.clientY;
         if (main.clientHeight - y < 100) y = y - 100;
@@ -286,12 +289,19 @@ function mouseClickText(elmnt) {
         if (main.clientWidth - x < 100) x = x - 100;
         if (e.button == 2) {
             e.preventDefault();
-            if (elmnt.id == 'main') mouseRightClick2(x, y);
-            else mouseRightClick(elmnt, x, y);
+            if (elmnt.id != 'background') {
+                mouseRightClick(elmnt, x, y);
+                return;
+            } else if (elmnt.classList.contains('background')) {
+                mouseRightClick2(x, y);
+                return;
+            }
         }
     });
 
     function mouseRightClick(elmnt, x, y) {
+        if (document.getElementById(`for-background`))
+            document.getElementById(`for-background`).remove();
         if (document.getElementById(`for-${elmnt.id}`))
             document.getElementById(`for-${elmnt.id}`).remove();
         var el = document.createElement('div');
@@ -332,7 +342,7 @@ function mouseClickText(elmnt) {
                 <li>Ẩn nền</li>
                 <li>Ẩn toàn bộ skin</li>
                 <li>Hiện thị toàn bộ skin</li>
-                <li>Danh sách skin</li>
+                <li onclick="getListText()">Danh sách skin</li>
             </ul>`;
         setTimeout(() => {
             el.remove();
@@ -345,4 +355,12 @@ function mouseClickText(elmnt) {
         };
         document.querySelector('.main').appendChild(el);
     }
+}
+
+function getToday() {
+    var todayDate = new Date();
+    var day = todayDate.getDate() < 10 ? '0' + todayDate.getDate() : todayDate.getDate();
+    var month =
+        todayDate.getMonth() + 1 < 10 ? '0' + (todayDate.getMonth() + 1) : todayDate.getMonth() + 1;
+    return day + '/' + month + '/' + todayDate.getFullYear();
 }

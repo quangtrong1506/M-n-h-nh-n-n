@@ -7,16 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Màn hình nền</title>
     <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet" href="./src/fontawesome-free-6.2.0-web/css/all.min.css">
 </head>
 
 <body>
     <div class="main" id="main">
-        <div id="background" data-type="0">
+        <div id="background" data-type="0" class="background">
             <div class="background-view" style="display: none; background-image: url('./src/images/demo.jpg');"></div>
             <div class="background-view" style="display: none">
                 <video src="./src/video/xue-hu-sang-virtual-youtuber-preview.mp4" autoplay loop width="100%"
                     muted></video>
             </div>
+            <div class="background-view" style="display: none; background-color: black;"></div>
         </div>
 
         <div class="text-container">
@@ -133,6 +135,55 @@
                 <div class="content-3">
                     <div class="demo">
                         <div class="demo__text "></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-skin">
+            <div>
+                <div class="header">
+                    <div class="start">
+                        <span> Danh sách các skin</span>
+                    </div>
+                    <div class="end">
+                        <div class="group-btn">
+                            <span class="new-skin">Thêm mới</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="element">
+                        <div class="start">
+                            <div class="name">Trọng hasdhba had cahd cah ahd cah cahch ad ahd ah
+                                ac dqyc ahdhw ak c ud ah ahyd HỈ FHAD</div>
+                            <div class="time">
+                                <div>
+                                    <div class="created-at">
+                                        <span>Ngày tạo: </span>
+                                        <span>15-10-2022</span>
+                                    </div>
+                                    <div class="updated-at">
+                                        <span>Ngày sửa: </span>
+                                        <span>19-10-2023</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="end">
+                            <div class="group-btn">
+                                <div class="tooltip" data-tooltip="Chỉnh sửa">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </div>
+                                <div class="tooltip" data-tooltip="Hiện thị">
+                                    <i class="fa-sharp fa-solid fa-eye"></i>
+                                    <!-- <i class="fa-sharp fa-solid fa-eye-slash"></i> -->
+                                </div>
+                                <div class="tooltip" data-tooltip="Xóa">
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

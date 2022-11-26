@@ -64,7 +64,14 @@ window.onload = () => {
     }
     //Todo loadn dữ liệu "Text" khi load xong
     loadText();
-    mouseClickText('main');
+    var x = document.querySelector('.background');
+    x.addEventListener('mousemove', function () {
+        document.querySelector('.background').removeEventListener('mousedown', a);
+        mouseClickText('background');
+    });
+    x.addEventListener('mouseleave', function () {
+        document.querySelector('.background').removeEventListener('mousedown', a);
+    });
 };
 
 var textDemo = new Text();
@@ -271,7 +278,7 @@ function saveBtn(id) {
             arrText[i] = textDemo;
             showMessage('Thành công', 'Cập nhật dữ liệu thành công! Đã áp dụng');
             localStorage.setItem('Text', JSON.stringify(arrText));
-            hideEditText();
+            viewBlock(0);
             loadText();
             return;
         }
@@ -280,7 +287,7 @@ function saveBtn(id) {
     showMessage('Thành công', 'Thêm dữ liệu mới thành công! Đã áp dụng');
     localStorage.setItem('Text', JSON.stringify(arrText));
 
-    hideEditText();
+    viewBlock(0);
     loadText();
 }
 
@@ -369,23 +376,18 @@ function xoaBtn() {
     for (let i = 0; i < arrText.length; i++) {
         const element = arrText[i];
         if (element.id == id) {
-            arrText.slice(i, 1);
-            localStorage.setItem('Text', JSON.parse(arrText));
-            showMessage('Thành công', 'Cập nhật dữ liệu thành công! Đã áp dụng');
-            hideEditText();
+            arrText.splice(i, 1);
+            // a.splice
+            localStorage.setItem('Text', JSON.stringify(arrText));
+            showMessage('Thành công', 'Đã xóa, Cập nhật dữ liệu thành công! Đã áp dụng');
+            viewBlock(0);
             loadText();
             return;
         }
     }
     showMessage('Hủy', 'Bạn đã hủy thao tác!');
-    hideEditText();
+    viewBlock(0);
     loadText();
-}
-
-function hideEditText() {
-    //giao diện
-    document.querySelector('.main .edit-container').style.display = 'none';
-    document.querySelector('.main .text-container').style.display = 'block';
 }
 
 function setTextDemo(
@@ -438,8 +440,7 @@ function setNewPosition(id, x, y) {
 }
 
 function remoteEditText(id) {
-    document.querySelector('.main .edit-container').style.display = 'block';
-    document.querySelector('.main .text-container').style.display = 'none';
+    viewBlock(1);
     var element = document.getElementById(id);
     if (element) {
         var text = element.textContent,
@@ -522,3 +523,65 @@ function statusBtn2(id) {
     localStorage.setItem('Text', JSON.stringify(a));
     loadText();
 }
+
+function getListText() {
+    viewBlock(2);
+    var array = JSON.parse(localStorage.getItem('Text')) || [];
+    var container = document.querySelector('.list-skin .container');
+    container.innerHTML = '';
+    for (let i = 0; i < array.length; i++) {
+        const element = array[i];
+        var elmnt = document.createElement('div');
+        elmnt.classList = 'element';
+        elmnt.innerHTML = `
+         <div class="start">
+             <div class="name">${element.text}</div>
+             <div class="time">
+                 <div>
+                     <div class="created-at">
+                         <span>Ngày tạo: </span>
+                         <span>${element.time.createdAt}</span>
+                     </div>
+                     <div class="updated-at">
+                         <span>Ngày sửa: </span>
+                         <span>${element.time.updatedAt}</span>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <div class="end">
+             <div class="group-btn">
+                 <div class="tooltip" data-tooltip="Chỉnh sửa">
+                     <i class="fa-solid fa-pen-to-square" onclick="remoteEditText('${element.id}')"></i>
+                 </div>
+                 <div class="tooltip" data-tooltip="Hiện thị" onclick="">
+                     <i class="fa-sharp fa-solid fa-eye"></i>
+                     <!-- <i class="fa-sharp fa-solid fa-eye-slash" onclick=""></i> -->
+                 </div>
+                 <div class="tooltip" data-tooltip="Xóa" onclick="">
+                     <i class="fa-solid fa-trash"></i>
+                 </div>
+             </div>
+         </div>
+     </div>`;
+        container.appendChild(elmnt);
+    }
+}
+
+function viewBlock(n) {
+    var arrBlock = [];
+    var textContent = document.querySelector('.text-container'); // 0
+    var editContainer = document.querySelector('.edit-container'); //1
+    var listSkin = document.querySelector('.list-skin'); //2
+    arrBlock.push(textContent);
+    arrBlock.push(editContainer);
+    arrBlock.push(listSkin);
+
+    arrBlock.forEach((element) => {
+        element.style.display = 'none';
+        console.log(element);
+    });
+    arrBlock[n].style.display = 'block';
+}
+
+viewBlock(2);
