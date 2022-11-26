@@ -370,8 +370,8 @@ function loadText() {
     }
 }
 
-function xoaBtn() {
-    var id = document.querySelector('.edit-container').id;
+function xoaBtn(id) {
+    id = id || document.querySelector('.edit-container').id;
     var arrText = JSON.parse(localStorage.getItem('Text')) || [];
     for (let i = 0; i < arrText.length; i++) {
         const element = arrText[i];
@@ -388,6 +388,20 @@ function xoaBtn() {
     showMessage('Hủy', 'Bạn đã hủy thao tác!');
     viewBlock(0);
     loadText();
+}
+function xoaBtn2(id) {
+    var arrText = JSON.parse(localStorage.getItem('Text')) || [];
+    for (let i = 0; i < arrText.length; i++) {
+        const element = arrText[i];
+        if (element.id == id) {
+            var x = confirm('Xác nhận xóa');
+            if (!x) return;
+            arrText.splice(i, 1);
+            localStorage.setItem('Text', JSON.stringify(arrText));
+            getListText();
+            showMessage('Thành công', 'Đã xóa, Cập nhật dữ liệu thành công!');
+        }
+    }
 }
 
 function setTextDemo(
@@ -556,9 +570,9 @@ function getListText() {
                  </div>
                  <div class="tooltip" data-tooltip="Hiện thị" onclick="">
                      <i class="fa-sharp fa-solid fa-eye"></i>
-                     <!-- <i class="fa-sharp fa-solid fa-eye-slash" onclick=""></i> -->
+                     <!-- <i class="fa-sharp fa-solid fa-eye-slash" ></i> -->
                  </div>
-                 <div class="tooltip" data-tooltip="Xóa" onclick="">
+                 <div class="tooltip" data-tooltip="Xóa" onclick="xoaBtn2('${element.id}')">
                      <i class="fa-solid fa-trash"></i>
                  </div>
              </div>
