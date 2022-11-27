@@ -35,6 +35,7 @@
                         <li onclick="changeTab(3)">Vị trí</li>
                         <li onclick="xoaBtn()">Xóa</li>
                         <li onclick="saveBtn2()">Lưu</li>
+                        <li onclick="viewBlock(0)">Hủy</li>
                     </ul>
                 </div>
                 <div class="content-2">
@@ -122,7 +123,7 @@
                         </div>
                         <div class="tab-3" style="display: none;">Tap 3</div>
                         <div class="tab-4" style="display: block;">
-                            <div>
+                            <div class="pos-input">
                                 <label>X</label>
                                 <input type="number" class="x-input" value="0" min="-50" max="1300">
                                 <label>Y</label>
@@ -149,46 +150,15 @@
                     <div class="end">
                         <div class="group-btn">
                             <span class="new-skin">Thêm mới</span>
+                            <span style="margin-left: 10px;color: red;" onclick="viewBlock(0)">Thoát</span>
                         </div>
-                        <ul>
+                        <ul style="display: none;">
                             <li onclick="remoteEditText()">Chữ nghệ thuật</li>
                             <li>Hệ thống sẵn có</li>
                         </ul>
                     </div>
                 </div>
                 <div class="container">
-                    <div class="element">
-                        <div class="start">
-                            <div class="name">Trọng hasdhba had cahd cah ahd cah cahch ad ahd ah
-                                ac dqyc ahdhw ak c ud ah ahyd HỈ FHAD</div>
-                            <div class="time">
-                                <div>
-                                    <div class="created-at">
-                                        <span>Ngày tạo: </span>
-                                        <span>15-10-2022</span>
-                                    </div>
-                                    <div class="updated-at">
-                                        <span>Ngày sửa: </span>
-                                        <span>19-10-2023</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="end">
-                            <div class="group-btn">
-                                <div class="tooltip" data-tooltip="Chỉnh sửa">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </div>
-                                <div class="tooltip" data-tooltip="Hiện thị">
-                                    <i class="fa-sharp fa-solid fa-eye"></i>
-                                    <!-- <i class="fa-sharp fa-solid fa-eye-slash"></i> -->
-                                </div>
-                                <div class="tooltip" data-tooltip="Xóa">
-                                    <i class="fa-solid fa-trash"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

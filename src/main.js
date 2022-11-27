@@ -43,7 +43,7 @@ window.onload = () => {
         // element.addEventListener('chan', function (e) {
         //     ;
         // });
-        element.addEventListener('change', function (e) {
+        element.addEventListener('change', function x(e) {
             changeValueNumberInput(e.target);
             var value = e.target.value;
             if (!value) e.target.value = 0;
@@ -72,6 +72,17 @@ window.onload = () => {
     x.addEventListener('mouseleave', function () {
         document.querySelector('.background').removeEventListener('mousedown', a);
     });
+    (() => {
+        document
+            .querySelector('div.list-skin > div > div.header > div.end span.new-skin')
+            .addEventListener('click', () => {
+                var ul = document.querySelector('div.list-skin > div > div.header > div.end > ul');
+                ul.style.display = 'block';
+                ul.addEventListener('mouseleave', () => {
+                    ul.style.display = 'none';
+                });
+            });
+    })();
 };
 
 var textDemo = new Text();
@@ -154,6 +165,9 @@ function onchangeValueTab1() {
         ? (textDemo.italic = 'italic')
         : (textDemo.italic = 'initial');
 
+    if (!text) document.querySelector('.tab .tab-1 .text-input').style.borderColor = 'red';
+    else document.querySelector('.tab .tab-1 .text-input').style.borderColor = 'black';
+
     textDemo.fontSize = size;
     textDemo.fontFamily = font;
     textDemo.text = text;
@@ -198,7 +212,6 @@ function changeTypeColor(event) {
         document.querySelector('.tab-2 .multi').style.display = 'block';
         textDemo.colorType = 1;
         var a = document.querySelectorAll('.colorx4 input');
-        console.log('🚀 ~ file: main.js ~ line 171 ~ changeTypeColor ~ a', a);
         a[0].value = textDemo.multiColor.color1;
         a[1].value = textDemo.multiColor.color2;
         a[2].value = textDemo.multiColor.color3;
@@ -259,21 +272,27 @@ function changePosition() {
     var xElement = document.querySelector('.content .content-2 .tab-4 .x-input');
     var yElement = document.querySelector('.content .content-2 .tab-4 .y-input');
 
-    var y = yElement.value < 50 ? 50 : yElement.value > 1300 ? 1300 : yElement.value;
-    var x = xElement.value < 50 ? 50 : xElement.value > 600 ? 600 : xElement.value;
+    var x = xElement.value < 50 ? 50 : xElement.value > 1300 ? 1300 : xElement.value;
+    var y = yElement.value < 50 ? 50 : yElement.value > 600 ? 600 : yElement.value;
 
-    textDemo.x = x;
-    textDemo.y = y;
+    textDemo.x = parseInt(x);
+    textDemo.y = parseInt(y);
 }
 function saveBtn2() {
     var id = document.querySelector('.edit-container').id;
+    changePosition();
+    if (!textDemo.text) {
+        showMessage('Lỗi', 'Văn bản trống không thể lưu');
+        changeTab(0);
+        document.querySelector('.tab .tab-1 .text-input').focus();
+        return;
+    }
     saveBtn(id);
 }
 function saveBtn(id) {
     var arrText = JSON.parse(localStorage.getItem('Text')) || [];
     for (let i = 0; i < arrText.length; i++) {
         if (arrText[i].id == id) {
-            console.log(typeof id);
             //Cập nhật nếu tồn tại
             arrText[i] = textDemo;
             showMessage('Thành công', 'Cập nhật dữ liệu thành công! Đã áp dụng');
@@ -298,7 +317,9 @@ function showMessage(title, message, type) {
     element.innerHTML = `
     <div class="title">${title}</div>
     <div class="mes">${message}</div>
-    <div class="close-btn">×</div>`;
+    <div class="close-btn">×</div>
+    <div class="bottom-time"></div>
+    `;
     element.addEventListener('click', (e) => {
         if (e.target.classList.contains('close-btn')) {
             var a = setInterval((event) => {
@@ -372,6 +393,8 @@ function loadText() {
 
 function xoaBtn(id) {
     id = id || document.querySelector('.edit-container').id;
+    x = confirm('Vui lòng xác nhận xóa');
+    if (!x) return;
     var arrText = JSON.parse(localStorage.getItem('Text')) || [];
     for (let i = 0; i < arrText.length; i++) {
         const element = arrText[i];
@@ -394,7 +417,7 @@ function xoaBtn2(id) {
     for (let i = 0; i < arrText.length; i++) {
         const element = arrText[i];
         if (element.id == id) {
-            var x = confirm('Xác nhận xóa');
+            var x = confirm('Xác nhận xóa: ' + element.text);
             if (!x) return;
             arrText.splice(i, 1);
             localStorage.setItem('Text', JSON.stringify(arrText));
@@ -455,28 +478,32 @@ function setNewPosition(id, x, y) {
 
 function remoteEditText(id) {
     viewBlock(1);
-    var element = document.getElementById(id);
+    var a = JSON.parse(localStorage.getItem('Text')) || [];
+    var element;
+    a.forEach((x) => {
+        if (x.id == id) {
+            element = x;
+        }
+    });
     if (element) {
-        var text = element.textContent,
-            color = element.style.color,
-            fontFamily = element.style.fontFamily.replace(/\"/g, ''),
-            fontSize = element.style.fontSize,
-            backgroundColor = element.style.backgroundColor,
-            status = 1,
-            bold = element.style.fontWeight,
-            italic = element.style.fontStyle,
-            x = element.style.left,
-            y = element.style.top,
-            typeColor = element.getAttribute('data-type-color'),
+        var text = element.text,
+            color = element.color,
+            fontFamily = element.fontFamily.replace(/\"/g, ''),
+            fontSize = element.fontSize,
+            backgroundColor = element.backgroundColor,
+            status = element.status,
+            bold = element.bold,
+            italic = element.fontStyle,
+            x = element.x,
+            y = element.y,
+            typeColor = element.typeColor,
             multiColor = {};
-        if (element.classList.contains('linear-gradient')) {
-            var background = element.getAttribute('data-color');
-            var acolor = background.split(',');
-            multiColor.color1 = acolor[0];
-            multiColor.color2 = acolor[1];
-            multiColor.color3 = acolor[2];
-            multiColor.color4 = acolor[3];
-            multiColor.pos = element.getAttribute('data-pos');
+        if (typeColor == 1) {
+            multiColor.color1 = element.multiColor.color1;
+            multiColor.color2 = element.multiColor.color2;
+            multiColor.color3 = element.multiColor.color3;
+            multiColor.color4 = element.multiColor.color4;
+            multiColor.pos = element.multiColor.pos;
         }
         var options = {
             text: text,
@@ -495,11 +522,16 @@ function remoteEditText(id) {
         textDemo = new Text(id, options);
     } else textDemo = new Text();
     //Todo set Value
+    console.log(textDemo);
     document.querySelector('.main .edit-container').id = textDemo.id;
     document.getElementById('text-input').value = textDemo.text;
     document.getElementById('size-input').value = parseInt(textDemo.fontSize);
     if (textDemo.bold == 'bold') document.getElementById('bold').selected;
     if (textDemo.italic == 'italic') document.getElementById('i').selected;
+    document.querySelector('.content .content-2 .tab-4 .x-input').value = textDemo.x;
+    document.querySelector('.content .content-2 .tab-4 .y-input').value = textDemo.y;
+    document.querySelector('.content .content-2 .color-input').value = textDemo.color;
+
     onchangeValueTab1();
     setStyleTextDemo();
     changeTab(0);
@@ -545,11 +577,17 @@ function getListText() {
     container.innerHTML = '';
     for (let i = 0; i < array.length; i++) {
         const element = array[i];
+
+        var eye =
+            element.status == 0
+                ? `<i class="fa-sharp fa-solid fa-eye"></i>`
+                : `<i class="fa-sharp fa-solid fa-eye-slash" ></i>`;
+        var eyeText = element.status == 0 ? `Hiển thị` : `Ẩn`;
         var elmnt = document.createElement('div');
         elmnt.classList = 'element';
         elmnt.innerHTML = `
          <div class="start">
-             <div class="name">${element.text}</div>
+             <div class="name" onclick="remoteEditText('${element.id}')">${element.text}</div>
              <div class="time">
                  <div>
                      <div class="created-at">
@@ -568,10 +606,7 @@ function getListText() {
                  <div class="tooltip" data-tooltip="Chỉnh sửa">
                      <i class="fa-solid fa-pen-to-square" onclick="remoteEditText('${element.id}')"></i>
                  </div>
-                 <div class="tooltip" data-tooltip="Hiện thị" onclick="">
-                     <i class="fa-sharp fa-solid fa-eye"></i>
-                     <!-- <i class="fa-sharp fa-solid fa-eye-slash" ></i> -->
-                 </div>
+                 <div class="tooltip" data-tooltip="${eyeText}" onclick="hideText2('${element.id}')">${eye}</div>
                  <div class="tooltip" data-tooltip="Xóa" onclick="xoaBtn2('${element.id}')">
                      <i class="fa-solid fa-trash"></i>
                  </div>
@@ -593,9 +628,25 @@ function viewBlock(n) {
 
     arrBlock.forEach((element) => {
         element.style.display = 'none';
-        console.log(element);
     });
     arrBlock[n].style.display = 'block';
+    if (n == 0) loadText();
 }
 
-viewBlock(2);
+function hideText2(id) {
+    var a = JSON.parse(localStorage.getItem('Text')) || [];
+    for (let i = 0; i < a.length; i++) {
+        if (a[i].id == id) {
+            if (a[i].status == 1) {
+                a[i].status = 0;
+                localStorage.setItem('Text', JSON.stringify(a));
+                showMessage('Thành công', 'Đã ẩn khỏi màn hình');
+            } else {
+                a[i].status = 1;
+                localStorage.setItem('Text', JSON.stringify(a));
+                showMessage('Thành công', 'Đã hiển thị trên màn hình');
+            }
+            getListText();
+        }
+    }
+}
