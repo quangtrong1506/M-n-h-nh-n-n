@@ -21,9 +21,7 @@
             <div class="background-view" style="display: none; background-color: black;"></div>
         </div>
 
-        <div class="text-container">
-
-        </div>
+        <div class="text-container"></div>
         <div class="edit-container" style="display: none;">
             <h1>Chỉnh sửa văn bản hiển thị</h1>
             <div class="content">
@@ -121,7 +119,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-3" style="display: none;">Tap 3</div>
+                        <div class="tab-3" style="display: none;">
+                            <label style="text-align: center;">Chọn màu nền</label>
+                            <input type="color">
+                            <label style="text-align: center;">Hoặc</label>
+                            <input type="button" value="Màu ngẫu nhiên">
+
+                            <label style="text-align: center;">Độ trong suốt</label>
+                            <input type="range" min="0" max="100" value="0">
+                            <span>100%</span>
+                        </div>
                         <div class="tab-4" style="display: block;">
                             <div class="pos-input">
                                 <label>X</label>
@@ -141,7 +148,7 @@
             </div>
         </div>
 
-        <div class="list-skin">
+        <div class="list-skin" style="display: none;">
             <div>
                 <div class="header">
                     <div class="start">

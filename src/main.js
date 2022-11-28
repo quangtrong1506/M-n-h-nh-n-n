@@ -81,6 +81,9 @@ window.onload = () => {
                 ul.addEventListener('mouseleave', () => {
                     ul.style.display = 'none';
                 });
+                setTimeout(() => {
+                    ul.style.display = 'none';
+                }, 10000);
             });
     })();
 };
@@ -199,7 +202,7 @@ function randomColorBtn() {
 
 // Thay đổi loại màu của chữ
 function changeTypeColor(event) {
-    var select = event.target.value;
+    var select = typeof event == 'number' ? event : event.target.value;
     if (select == 0) {
         document.querySelector('.tab-2 .single').style.display = 'inline-block';
         document.querySelector('.tab-2 .multi').style.display = 'none';
@@ -218,6 +221,8 @@ function changeTypeColor(event) {
         a[3].value = textDemo.multiColor.color4;
         document.querySelector('.multi-select').style.display = 'block';
     } else if (select == 2) {
+        document.querySelector('.tab-2 .single').style.display = 'none';
+        document.querySelector('.tab-2 .multi').style.display = 'block';
         textDemo.colorType = 2;
         document.querySelector('.multi-select').style.display = 'none';
     }
@@ -294,6 +299,7 @@ function saveBtn(id) {
     for (let i = 0; i < arrText.length; i++) {
         if (arrText[i].id == id) {
             //Cập nhật nếu tồn tại
+            textDemo.time.updatedAt = getToday();
             arrText[i] = textDemo;
             showMessage('Thành công', 'Cập nhật dữ liệu thành công! Đã áp dụng');
             localStorage.setItem('Text', JSON.stringify(arrText));
@@ -496,15 +502,27 @@ function remoteEditText(id) {
             italic = element.fontStyle,
             x = element.x,
             y = element.y,
-            typeColor = element.typeColor,
+            colorType = element.colorType,
             multiColor = {};
-        if (typeColor == 1) {
+        if (element.colorType == 0) changeTypeColor(0);
+        else if (element.colorType == 1) {
             multiColor.color1 = element.multiColor.color1;
             multiColor.color2 = element.multiColor.color2;
             multiColor.color3 = element.multiColor.color3;
             multiColor.color4 = element.multiColor.color4;
             multiColor.pos = element.multiColor.pos;
+            document.querySelector('.tab .tab-2 select').value = 1;
+            document.querySelector('.tab .tab-2 .multi select').value = 1;
+            document.querySelector('.tab .tab-2 .multi .multi-select select').value =
+                multiColor.pos;
+            changeTypeColor(1);
+        } else if (element.colorType == 2) {
+            document.querySelector('.tab .tab-2 select').value = 1;
+
+            document.querySelector('.tab .tab-2 .multi select').value = 2;
+            changeTypeColor(2);
         }
+
         var options = {
             text: text,
             color: color,
@@ -516,13 +534,16 @@ function remoteEditText(id) {
             status: status,
             bold: bold,
             italic: italic,
-            colorType: typeColor,
+            colorType: colorType,
             multiColor: multiColor,
+            time: {
+                createdAt: element.time.createdAt || getToday(),
+                updatedAt: element.time.createdAt || getToday(),
+            },
         };
         textDemo = new Text(id, options);
     } else textDemo = new Text();
-    //Todo set Value
-    console.log(textDemo);
+    //Todo set Value // dữ liệu ở chỗ chỉnh sửa
     document.querySelector('.main .edit-container').id = textDemo.id;
     document.getElementById('text-input').value = textDemo.text;
     document.getElementById('size-input').value = parseInt(textDemo.fontSize);
@@ -630,7 +651,7 @@ function viewBlock(n) {
         element.style.display = 'none';
     });
     arrBlock[n].style.display = 'block';
-    if (n == 0) loadText();
+    if (n == 0) mouseClickText('background');
 }
 
 function hideText2(id) {

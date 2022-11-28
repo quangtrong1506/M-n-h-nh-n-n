@@ -24,6 +24,7 @@ class Text {
             createdAt: getToday(),
             updatedAt: getToday(),
         };
+        
     }
 }
 
@@ -328,6 +329,7 @@ function mouseClickText(elmnt) {
         document.querySelector('.main').appendChild(el);
     }
     function mouseRightClick2(x, y) {
+        if (document.querySelector('.text-container').style.display == 'none') return;
         if (document.getElementById(`for-background`))
             document.getElementById(`for-background`).remove();
         var el = document.createElement('div');
